@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect AI — Student Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand-icon">🎓</div>
+                <div class="sidebar-brand-text">
+                    <h1>CampusConnect</h1>
+                    <span>AI Campus Life</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <span class="nav-section-title">Core Services</span>
+                <a href="index.html" class="nav-link active">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <span class="nav-icon">📈</span>
+                    <span>Attendance</span>
+                </a>
+                <a href="timetable.html" class="nav-link">
+                    <span class="nav-icon">📅</span>
+                    <span>Timetable</span>
+                </a>
+                <a href="requests.html" class="nav-link">
+                    <span class="nav-icon">📝</span>
+                    <span>Gate Pass &amp; Leave</span>
+                </a>
+                <a href="hostel.html" class="nav-link">
+                    <span class="nav-icon">🏢</span>
+                    <span>Hostel Helpdesk</span>
+                </a>
+                <a href="mess-canteen.html" class="nav-link">
+                    <span class="nav-icon">🍲</span>
+                    <span>Mess &amp; Canteen</span>
+                </a>
+                <a href="fees.html" class="nav-link">
+                    <span class="nav-icon">💳</span>
+                    <span>Fees &amp; Dues</span>
+                </a>
+                <a href="notices.html" class="nav-link">
+                    <span class="nav-icon">📢</span>
+                    <span>Notices &amp; Events</span>
+                </a>
+
+                <span class="nav-section-title">Role Management</span>
+                <a href="admin.html" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Admin Portal</span>
+                </a>
+                <a href="login.html" class="nav-link">
+                    <span class="nav-icon">🔄</span>
+                    <span>Switch Role / Login</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-mini-profile">
+                    <div class="user-avatar current-user-avatar">AS</div>
+                    <div class="user-details">
+                        <div class="user-name current-user-name">Aarav Sharma</div>
+                        <span class="user-role-badge current-user-dept">Student (24CS042)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="top-nav-left">
+                    <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+                    <div class="page-title-crumb">
+                        <h2>Student Dashboard</h2>
+                        <span>Welcome back, <strong class="current-user-name">Aarav Sharma</strong> · Semester 3</span>
+                    </div>
+                </div>
+                <div class="top-nav-right">
+                    <button class="btn btn-sm sos-quick-btn" onclick="triggerCampusSOS()" title="Instant Emergency Safety Dispatch">
+                        🚨 SOS EMERGENCY
+                    </button>
+                    <span class="role-switcher-pill">
+                        <span>👤 Role:</span>
+                        <strong class="current-user-role">Student</strong>
+                    </span>
+                    <button class="btn btn-outline btn-sm" onclick="switchUserRole('admin')">
+                        Switch to Admin
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="logoutUser()">
+                        Logout
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="content-wrapper">
+                <!-- Welcome Banner Card -->
+                <div class="card" style="background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #0284c7 100%); color: white; border: none; margin-bottom: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <span class="badge" style="background: rgba(255,255,255,0.2); color: white; margin-bottom: 0.5rem;" id="dash-program-badge">Semester 3 · B.Tech Computer Science</span>
+                            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.35rem;">Smart Campus Life Portal</h2>
+                            <p style="font-size: 0.85rem; opacity: 0.9; max-width: 650px;">
+                                Seamlessly track your academic attendance, daily mess menus, submit hostel maintenance tickets, apply for gate passes, book confidential wellness sessions, and get 24/7 instant AI guidance.
+                            </p>
+                        </div>
+                        <div style="text-align: right; background: rgba(255,255,255,0.12); padding: 0.85rem 1.25rem; border-radius: var(--radius-md); backdrop-filter: blur(4px);">
+                            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.85;">Hostel Accommodation</div>
+                            <div style="font-size: 1.15rem; font-weight: 700;" id="dash-room-val">Block B · Room 204</div>
+                            <div style="font-size: 0.75rem; opacity: 0.9;">Curfew: 09:00 PM · Wi-Fi: Active</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Key Stat Metrics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Overall Attendance</div>
+                            <div class="stat-value" id="dash-attendance-val">84.5%</div>
+                            <div class="stat-sub" id="dash-attendance-sub">✅ Above 75% Requirement</div>
+                        </div>
+                        <div class="stat-icon blue">📈</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Today's Classes</div>
+                            <div class="stat-value" id="dash-classes-val">4 Classes</div>
+                            <div class="stat-sub">Next: LH-102 @ 10:05 AM</div>
+                        </div>
+                        <div class="stat-icon green">📅</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Pending Requests</div>
+                            <div class="stat-value" id="dash-requests-val">1 Active</div>
+                            <div class="stat-sub">Hostel Weekend Leave</div>
+                        </div>
+                        <div class="stat-icon amber">📝</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Open Hostel Tickets</div>
+                            <div class="stat-value" id="dash-complaints-val">1 Ticket</div>
+                            <div class="stat-sub">Wi-Fi &amp; Network (In Progress)</div>
+                        </div>
+                        <div class="stat-icon rose">🔧</div>
+                    </div>
+                </div>
+
+                <!-- Quick Services Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>⚡ Quick Services Actions</h3>
+                        <span class="text-muted" style="font-size: 0.8rem;">Instant one-click access to essential campus resources</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <a href="requests.html" class="btn btn-outline" style="justify-content: flex-start; padding: 0.85rem; border-color: var(--primary-border);">
+                            <span style="font-size: 1.35rem; margin-right: 0.5rem;">🚪</span>
+                            <div style="text-align: left;">
+                                <div style="font-weight: 700; font-size: 0.85rem;">Apply Gate Pass</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">Day outing or weekend</div>
+                            </div>
+                        </a>
+                        <a href="hostel.html" class="btn btn-outline" style="justify-content: flex-start; padding: 0.85rem; border-color: var(--primary-border);">
+                            <span style="font-size: 1.35rem; margin-right: 0.5rem;">🔧</span>
+                            <div style="text-align: left;">
+                                <div style="font-weight: 700; font-size: 0.85rem;">Lodge Hostel Issue</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">Electricity, Wi-Fi, Water</div>
+                            </div>
+                        </a>
+                        <a href="mess-canteen.html" class="btn btn-outline" style="justify-content: flex-start; padding: 0.85rem; border-color: var(--primary-border);">
+                            <span style="font-size: 1.35rem; margin-right: 0.5rem;">🍲</span>
+                            <div style="text-align: left;">
+                                <div style="font-weight: 700; font-size: 0.85rem;">Today's Mess Menu</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">Meal times &amp; canteen items</div>
+                            </div>
+                        </a>
+                        <a href="attendance.html" class="btn btn-outline" style="justify-content: flex-start; padding: 0.85rem; border-color: var(--primary-border);">
+                            <span style="font-size: 1.35rem; margin-right: 0.5rem;">📊</span>
+                            <div style="text-align: left;">
+                                <div style="font-weight: 700; font-size: 0.85rem;">Attendance Calculator</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">Simulate attendance %</div>
+                            </div>
+                        </a>
+                        <button type="button" class="btn btn-outline" onclick="openCounselingModal()" style="justify-content: flex-start; padding: 0.85rem; border-color: #bae6fd;">
+                            <span style="font-size: 1.35rem; margin-right: 0.5rem;">🧠</span>
+                            <div style="text-align: left;">
+                                <div style="font-weight: 700; font-size: 0.85rem; color: #0369a1;">Mental Health &amp; Counselor</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">Confidential 1-on-1 booking</div>
+                            </div>
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="openLostFoundModal()" style="justify-content: flex-start; padding: 0.85rem; border-color: #fde68a;">
+                            <span style="font-size: 1.35rem; margin-right: 0.5rem;">🔍</span>
+                            <div style="text-align: left;">
+                                <div style="font-weight: 700; font-size: 0.85rem; color: #b45309;">Lost &amp; Found Desk</div>
+                                <div style="font-size: 0.72rem; color: var(--text-muted);">Report or claim lost items</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2 Column Layout: Schedule & Notices -->
+                <div class="grid-2">
+                    <!-- Today's Schedule -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📅 Today's Schedule (<span id="dash-day-name">Today</span>)</h3>
+                            <a href="timetable.html" class="btn btn-outline btn-sm">Full Week Timetable →</a>
+                        </div>
+                        <div id="dash-schedule-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Campus Announcements & Notices -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📢 Campus Notices &amp; Circulars</h3>
+                            <a href="notices.html" class="btn btn-outline btn-sm">View All Circulars →</a>
+                        </div>
+                        <div id="dash-notices-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Requests & Hostel Tickets Tracker Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📌 Active Applications &amp; Maintenance Tickets</h3>
+                        <span class="text-muted" style="font-size: 0.75rem;">Real-time sync with administration</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Reference ID</th>
+                                    <th>Service Type</th>
+                                    <th>Details / Reason</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Admin / Warden Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dash-recent-activities">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confidential Mental Health Counseling Modal -->
+    <div id="counseling-modal" class="modal-backdrop" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3>🧠 Book Confidential Mental Health Session</h3>
+                <button type="button" class="modal-close" onclick="closeCounselingModal()">✖</button>
+            </div>
+            <form onsubmit="handleCounselingSubmit(event)">
+                <div class="modal-body">
+                    <p style="font-size: 0.825rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Your mental wellness is protected. Consultations with our certified campus psychologists are 100% confidential, private, and free.
+                    </p>
+                    <div class="form-group">
+                        <label class="form-label" for="counsel-doctor">Campus Counselor / Psychologist</label>
+                        <select id="counsel-doctor" class="form-control" required>
+                            <option value="Dr. Priya Sen (Clinical Psychologist)">Dr. Priya Sen (Clinical Psychologist - Wellness Hub 208)</option>
+                            <option value="Dr. M. K. Nair (Academic Stress Specialist)">Dr. M. K. Nair (Academic Stress &amp; Anxiety Specialist)</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="counsel-date">Preferred Date</label>
+                            <input type="date" id="counsel-date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="counsel-time">Preferred Time Slot</label>
+                            <select id="counsel-time" class="form-control" required>
+                                <option value="11:00 AM - 12:00 PM">11:00 AM - 12:00 PM</option>
+                                <option value="02:30 PM - 03:30 PM">02:30 PM - 03:30 PM</option>
+                                <option value="04:30 PM - 05:30 PM">04:30 PM - 05:30 PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="counsel-concern">Support Area / Concern</label>
+                        <select id="counsel-concern" class="form-control" required>
+                            <option value="Academic Pressure & Exam Anxiety">Academic Pressure &amp; Exam Anxiety</option>
+                            <option value="Homesickness & Hostel Adjustment">Homesickness &amp; Hostel Adjustment</option>
+                            <option value="Sleep Cycle & Burnout">Sleep Cycle &amp; Burnout</option>
+                            <option value="Personal Wellness Consultation">Personal Wellness Consultation</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeCounselingModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Confirm Confidential Appointment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Digital Lost & Found Modal -->
+    <div id="lostfound-modal" class="modal-backdrop" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3>🔍 Digital Lost &amp; Found Portal</h3>
+                <button type="button" class="modal-close" onclick="closeLostFoundModal()">✖</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 1.25rem;">
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">📦 Recently Recovered Campus Items</h4>
+                    <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.75rem; font-size: 0.8rem; line-height: 1.6;">
+                        • <strong>Casio FX-991CW Scientific Calculator</strong> (Found: Central Library 2nd Floor)<br>
+                        • <strong>Blue Hydro Flask Water Bottle</strong> (Found: LH-201 Bench 4)<br>
+                        • <strong>Honda Bike Keyring with Red Tag</strong> (Found: Mess Cafeteria counter)
+                    </div>
+                </div>
+
+                <form onsubmit="handleLostFoundSubmit(event)">
+                    <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem;">📝 Report a Lost or Found Belonging</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="lf-type">Type of Report</label>
+                            <select id="lf-type" class="form-control" required>
+                                <option value="Lost">I Lost Something</option>
+                                <option value="Found">I Found Something</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="lf-item">Item Name</label>
+                            <input type="text" id="lf-item" class="form-control" placeholder="e.g. Black Titan Watch" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="lf-loc">Location on Campus</label>
+                        <input type="text" id="lf-loc" class="form-control" placeholder="e.g. Near Basketball Court" required>
+                    </div>
+                    <div class="modal-footer" style="padding-left: 0; padding-right: 0; padding-bottom: 0;">
+                        <button type="button" class="btn btn-outline" onclick="closeLostFoundModal()">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit Report to Security Desk</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="ai-assistant.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            renderDashboard();
+            
+            // Set default date for counseling
+            const d = new Date();
+            d.setDate(d.getDate() + 1);
+            const dateInput = document.getElementById("counsel-date");
+            if (dateInput) {
+                dateInput.value = d.toISOString().split("T")[0];
+                dateInput.min = new Date().toISOString().split("T")[0];
+            }
+        });
+
+        function renderDashboard() {
+            const data = CampusData.getData();
+            const activeUser = CampusData.getCurrentUser();
+
+            // Personalize banner
+            document.getElementById("dash-room-val").textContent = `${activeUser.hostel || 'Hostel'} · Room ${activeUser.roomNo || '204'}`;
+            document.getElementById("dash-program-badge").textContent = `${activeUser.semester || 'Semester 3'} · ${activeUser.program || 'B.Tech CSE'}`;
+
+            // 1. Attendance stat
+            let totalAtt = 0, totalHeld = 0;
+            data.attendance.forEach(s => {
+                totalAtt += s.attended;
+                totalHeld += s.total;
+            });
+            const overall = totalHeld > 0 ? ((totalAtt / totalHeld) * 100).toFixed(1) : 0;
+            document.getElementById("dash-attendance-val").textContent = `${overall}%`;
+
+            // 2. Pending Requests
+            const pendingReqs = data.requests.filter(r => r.status === "Pending");
+            document.getElementById("dash-requests-val").textContent = `${pendingReqs.length} Pending`;
+
+            // 3. Open complaints
+            const openTickets = data.hostelComplaints.filter(t => t.status !== "Resolved");
+            document.getElementById("dash-complaints-val").textContent = `${openTickets.length} Active`;
+
+            // 4. Today's Day & Schedule
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const currentDay = days[new Date().getDay()];
+            const dayToQuery = (currentDay === "Sunday") ? "Monday" : currentDay;
+            document.getElementById("dash-day-name").textContent = dayToQuery;
+
+            const daySlots = data.timetable.filter(t => t.day.toLowerCase() === dayToQuery.toLowerCase());
+            document.getElementById("dash-classes-val").textContent = `${daySlots.length} Classes`;
+
+            const schedList = document.getElementById("dash-schedule-list");
+            if (daySlots.length === 0) {
+                schedList.innerHTML = `<div style="padding: 1rem; text-align: center; color: var(--text-muted);">No classes scheduled for ${dayToQuery}. Enjoy your day!</div>`;
+            } else {
+                schedList.innerHTML = daySlots.map(slot => `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+                        <div>
+                            <span class="badge badge-info" style="margin-bottom: 0.25rem;">${slot.time}</span>
+                            <div style="font-weight: 700; font-size: 0.875rem;">${slot.subject} (${slot.code})</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">Faculty: ${slot.faculty}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span class="badge" style="background: #e2e8f0; color: #334155;">📍 ${slot.room}</span>
+                            <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">${slot.type}</div>
+                        </div>
+                    </div>
+                `).join("");
+            }
+
+            // 5. Notices (top 3)
+            const noticesList = document.getElementById("dash-notices-list");
+            const topNotices = data.notices.slice(0, 3);
+            noticesList.innerHTML = topNotices.map(n => `
+                <div style="padding: 0.75rem; background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                        <span class="badge ${n.priority === 'Urgent' ? 'badge-urgent' : 'badge-info'}">${n.category}</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">${n.date}</span>
+                    </div>
+                    <div style="font-weight: 600; font-size: 0.85rem; margin-bottom: 0.25rem;">${n.title}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">${n.body.substring(0, 100)}...</div>
+                </div>
+            `).join("");
+
+            // 6. Recent Requests and Complaints
+            const recentTable = document.getElementById("dash-recent-activities");
+            const combined = [];
+            data.requests.forEach(r => {
+                combined.push({
+                    id: r.id,
+                    type: r.type,
+                    desc: r.reason,
+                    date: r.submittedOn,
+                    status: r.status,
+                    remarks: r.adminRemarks
+                });
+            });
+            data.hostelComplaints.forEach(c => {
+                combined.push({
+                    id: c.id,
+                    type: `Hostel: ${c.category}`,
+                    desc: c.description,
+                    date: c.submittedOn,
+                    status: c.status,
+                    remarks: c.adminRemarks
+                });
+            });
+
+            if (combined.length === 0) {
+                recentTable.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No requests or tickets lodged yet.</td></tr>`;
+            } else {
+                recentTable.innerHTML = combined.slice(0, 4).map(item => `
+                    <tr>
+                        <td><strong>${item.id}</strong></td>
+                        <td><span class="badge badge-neutral">${item.type}</span></td>
+                        <td>${item.desc.length > 40 ? item.desc.substring(0, 40) + '...' : item.desc}</td>
+                        <td style="font-size: 0.75rem; color: var(--text-muted);">${item.date}</td>
+                        <td>${getStatusBadge(item.status)}</td>
+                        <td style="font-size: 0.78rem; color: var(--text-muted);">${item.remarks}</td>
+                    </tr>
+                `).join("");
+            }
+        }
+
+        // Modal triggers
+        function openCounselingModal() {
+            document.getElementById("counseling-modal").style.display = "flex";
+        }
+        function closeCounselingModal() {
+            document.getElementById("counseling-modal").style.display = "none";
+        }
+        function handleCounselingSubmit(e) {
+            e.preventDefault();
+            const doctor = document.getElementById("counsel-doctor").value;
+            const date = document.getElementById("counsel-date").value;
+            const time = document.getElementById("counsel-time").value;
+            const concern = document.getElementById("counsel-concern").value;
+
+            const res = CampusData.bookCounselingSession({
+                counselorName: doctor,
+                preferredDate: date,
+                preferredTime: time,
+                notes: concern
+            });
+
+            closeCounselingModal();
+            showToast(`Confidential session confirmed (${res.id})! Wellness center will reserve your slot.`, "success");
+        }
+
+        function openLostFoundModal() {
+            document.getElementById("lostfound-modal").style.display = "flex";
+        }
+        function closeLostFoundModal() {
+            document.getElementById("lostfound-modal").style.display = "none";
+        }
+        function handleLostFoundSubmit(e) {
+            e.preventDefault();
+            const type = document.getElementById("lf-type").value;
+            const item = document.getElementById("lf-item").value.trim();
+            const loc = document.getElementById("lf-loc").value.trim();
+
+            closeLostFoundModal();
+            showToast(`${type} item reported: "${item}". Security Post 1 notified!`, "success");
+        }
+    </script>
+</body>
+</html>

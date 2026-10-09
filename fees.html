@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect AI — Student Fees &amp; Accounts Desk</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand-icon">🎓</div>
+                <div class="sidebar-brand-text">
+                    <h1>CampusConnect</h1>
+                    <span>AI Campus Life</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <span class="nav-section-title">Core Services</span>
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <span class="nav-icon">📈</span>
+                    <span>Attendance</span>
+                </a>
+                <a href="timetable.html" class="nav-link">
+                    <span class="nav-icon">📅</span>
+                    <span>Timetable</span>
+                </a>
+                <a href="requests.html" class="nav-link">
+                    <span class="nav-icon">📝</span>
+                    <span>Gate Pass &amp; Leave</span>
+                </a>
+                <a href="hostel.html" class="nav-link">
+                    <span class="nav-icon">🏢</span>
+                    <span>Hostel Helpdesk</span>
+                </a>
+                <a href="mess-canteen.html" class="nav-link">
+                    <span class="nav-icon">🍲</span>
+                    <span>Mess &amp; Canteen</span>
+                </a>
+                <a href="fees.html" class="nav-link active">
+                    <span class="nav-icon">💳</span>
+                    <span>Fees &amp; Dues</span>
+                </a>
+                <a href="notices.html" class="nav-link">
+                    <span class="nav-icon">📢</span>
+                    <span>Notices &amp; Events</span>
+                </a>
+
+                <span class="nav-section-title">Role Management</span>
+                <a href="admin.html" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Admin Portal</span>
+                </a>
+                <a href="login.html" class="nav-link">
+                    <span class="nav-icon">🔄</span>
+                    <span>Switch Role / Login</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-mini-profile">
+                    <div class="user-avatar current-user-avatar">AS</div>
+                    <div class="user-details">
+                        <div class="user-name current-user-name">Aarav Sharma</div>
+                        <span class="user-role-badge current-user-dept">Student (24CS042)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="top-nav-left">
+                    <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+                    <div class="page-title-crumb">
+                        <h2>Fees, Dues &amp; Accounts Desk</h2>
+                        <span>Financial breakdown for Academic Year 2026-2027</span>
+                    </div>
+                </div>
+                <div class="top-nav-right">
+                    <span class="role-switcher-pill">
+                        <span>👤 Role:</span>
+                        <strong class="current-user-role">Student</strong>
+                    </span>
+                    <button class="btn btn-outline btn-sm" onclick="switchUserRole('admin')">
+                        Switch to Admin
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content-wrapper">
+                <!-- Prototype Disclaimer Alert -->
+                <div style="background: #eff6ff; border-left: 4px solid var(--primary); padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-size: 0.825rem; color: #1e40af;">
+                    💡 <strong>Hackathon Prototype Notice:</strong> Demonstrates student fee ledger inspection, receipt downloads, and financial query workflows. Real banking gateways and online debit card processing are intentionally excluded.
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Total Annual Fee</div>
+                            <div class="stat-value" id="fee-total-annual">₹1,11,500</div>
+                            <div class="stat-sub">Tuition, Hostel &amp; Mess</div>
+                        </div>
+                        <div class="stat-icon blue">💳</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Total Cleared</div>
+                            <div class="stat-value" id="fee-total-paid">₹1,08,000</div>
+                            <div class="stat-sub" style="color: var(--success); font-weight: 600;">✅ Paid &amp; Verified</div>
+                        </div>
+                        <div class="stat-icon green">💰</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Pending Balance</div>
+                            <div class="stat-value" id="fee-pending-balance" style="color: var(--danger);">₹3,500</div>
+                            <div class="stat-sub" id="fee-due-date">Due: 25 Oct 2026</div>
+                        </div>
+                        <div class="stat-icon rose">⚠️</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Financial Status</div>
+                            <div class="stat-value" style="font-size: 1.2rem;">Exam Fee Due</div>
+                            <div class="stat-sub">Semester 3 Hall Ticket Pending</div>
+                        </div>
+                        <div class="stat-icon amber">📄</div>
+                    </div>
+                </div>
+
+                <!-- Fee Ledger Table Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 Semester 3 Fee Ledger &amp; Receipts</h3>
+                        <span class="badge badge-info" id="fee-student-badge">Student Roll: 24CS042</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Voucher / Ref</th>
+                                    <th>Fee Head</th>
+                                    <th>Amount</th>
+                                    <th>Payment Status</th>
+                                    <th>Date Paid</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fee-breakdown-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 2 Column: Submit Fee Query & Track Queries -->
+                <div class="grid-2">
+                    <!-- Query Submission Form -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>✉️ Submit Fee / Accounts Query</h3>
+                            <span class="text-muted" style="font-size: 0.75rem;">Accounts Department Ticket</span>
+                        </div>
+
+                        <form id="fee-query-form" onsubmit="handleFeeQuerySubmit(event)">
+                            <div class="form-group">
+                                <label class="form-label" for="fq-category">Query Subject</label>
+                                <select id="fq-category" class="form-control" required>
+                                    <option value="Scholarship Credit Adjustment">Scholarship Credit Adjustment</option>
+                                    <option value="Payment Receipt Not Generated">Payment Receipt Not Generated</option>
+                                    <option value="Exam Fee Discrepancy">Exam Fee Discrepancy</option>
+                                    <option value="Hostel Caution Deposit Refund">Hostel Caution Deposit Refund</option>
+                                    <option value="Installment Plan Request">Fee Installment Request</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="fq-amount">Disputed Amount / Reference (Optional)</label>
+                                <input type="text" id="fq-amount" class="form-control" placeholder="e.g. ₹15,000 or UTR Ref">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="fq-details">Detailed Explanation</label>
+                                <textarea id="fq-details" class="form-control" placeholder="Explain your financial inquiry or scholarship details for the accounts officer..." required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Send Query to Accounts Office →
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Submitted Financial Queries -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📑 Submitted Financial Queries</h3>
+                            <span class="text-muted" style="font-size: 0.75rem;">Real-time Status</span>
+                        </div>
+
+                        <div id="fee-queries-list" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Official Fee Receipt Modal -->
+    <div class="modal-overlay" id="receipt-modal">
+        <div class="modal-card" style="max-width: 480px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a, #0284c7); color: white;">
+                <div>
+                    <h3 style="color: white; font-size: 1.1rem; margin: 0;">University Accounts Office</h3>
+                    <span style="font-size: 0.7rem; opacity: 0.85;">Official e-Receipt &amp; Payment Certificate</span>
+                </div>
+                <button class="modal-close-btn" style="color: white;" onclick="closeModal('receipt-modal')">×</button>
+            </div>
+            <div class="modal-body" id="receipt-modal-content">
+                <!-- Dynamically rendered receipt -->
+            </div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print Receipt</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('receipt-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="ai-assistant.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            renderFeeData();
+        });
+
+        function renderFeeData() {
+            const data = CampusData.getData();
+            const activeUser = CampusData.getCurrentUser();
+            const summary = data.fees.summary;
+            const breakdown = data.fees.breakdown;
+            const queries = data.fees.queries;
+
+            // Student badge
+            document.getElementById("fee-student-badge").textContent = `Student Roll: ${activeUser.rollNo || '24CS042'}`;
+
+            // Summary cards
+            document.getElementById("fee-total-annual").textContent = `₹${summary.totalAnnual.toLocaleString()}`;
+            document.getElementById("fee-total-paid").textContent = `₹${summary.totalPaid.toLocaleString()}`;
+            document.getElementById("fee-pending-balance").textContent = `₹${summary.pendingBalance.toLocaleString()}`;
+            document.getElementById("fee-due-date").textContent = `Due Date: ${summary.dueDate}`;
+
+            // Table
+            const tbody = document.getElementById("fee-breakdown-body");
+            tbody.innerHTML = breakdown.map(item => {
+                const isPaid = item.status === "Paid";
+                return `
+                    <tr>
+                        <td><strong>${item.receiptNo}</strong></td>
+                        <td style="font-weight: 600;">${item.head}</td>
+                        <td style="font-size: 0.95rem; font-weight: 700;">₹${item.amount.toLocaleString()}</td>
+                        <td>${getStatusBadge(item.status)}</td>
+                        <td style="font-size: 0.75rem; color: var(--text-muted);">${item.paidOn}</td>
+                        <td>
+                            ${isPaid ? 
+                                `<button class="btn btn-outline btn-sm" onclick="viewReceipt('${item.id}')">🧾 View Receipt</button>` :
+                                `<span class="badge badge-pending">Due on ${summary.dueDate}</span>`
+                            }
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+
+            // Queries
+            const qContainer = document.getElementById("fee-queries-list");
+            if (queries.length === 0) {
+                qContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 1.5rem;">No queries submitted yet.</div>`;
+                return;
+            }
+
+            qContainer.innerHTML = queries.map(q => `
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.85rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                        <span style="font-weight: 700; font-size: 0.85rem;">${q.id} · ${q.category}</span>
+                        ${getStatusBadge(q.status)}
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-main); margin-bottom: 0.35rem;">"${q.description}"</div>
+                    <div style="font-size: 0.75rem; background: white; border: 1px solid var(--border-color); padding: 0.45rem 0.65rem; border-radius: var(--radius-sm); color: #1e40af;">
+                        <strong>Accounts Note:</strong> ${q.adminResponse}
+                    </div>
+                    <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 0.35rem;">Submitted on: ${q.submittedOn}</div>
+                </div>
+            `).join("");
+        }
+
+        function handleFeeQuerySubmit(e) {
+            e.preventDefault();
+            const details = document.getElementById("fq-details").value.trim();
+            if (!details) {
+                showToast("Please provide details for your financial query.", "warning");
+                return;
+            }
+
+            const queryObj = {
+                category: document.getElementById("fq-category").value,
+                amount: document.getElementById("fq-amount").value || "N/A",
+                description: details
+            };
+
+            const created = CampusData.addFeeQuery(queryObj);
+            showToast(`Query ${created.id} submitted to Accounts Desk!`, "success");
+
+            document.getElementById("fq-details").value = "";
+            document.getElementById("fq-amount").value = "";
+            renderFeeData();
+        }
+
+        function viewReceipt(id) {
+            const data = CampusData.getData();
+            const activeUser = CampusData.getCurrentUser();
+            const item = data.fees.breakdown.find(f => f.id === id);
+            if (!item) return;
+
+            const content = document.getElementById("receipt-modal-content");
+            content.innerHTML = `
+                <div style="border-bottom: 2px dashed var(--border-color); padding-bottom: 1rem; margin-bottom: 1rem; text-align: center;">
+                    <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">Official Transaction Receipt</div>
+                    <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary); margin: 0.25rem 0;">${item.receiptNo}</div>
+                    <span class="badge badge-good">Payment Confirmed</span>
+                </div>
+
+                <div style="font-size: 0.825rem; line-height: 1.6; background: #f8fafc; padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                    <div><strong>Student Name:</strong> ${activeUser.name}</div>
+                    <div><strong>Roll Number:</strong> ${activeUser.rollNo || '24CS042'}</div>
+                    <div><strong>Program:</strong> ${activeUser.program || 'B.Tech CSE'}</div>
+                    <div><strong>Fee Particulars:</strong> ${item.head}</div>
+                    <div><strong>Transaction Date:</strong> ${item.paidOn}</div>
+                    <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border-color); font-size: 1.05rem; font-weight: 800; color: var(--primary);">
+                        Amount Cleared: ₹${item.amount.toLocaleString()}
+                    </div>
+                </div>
+
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 1rem; text-align: center;">
+                    Digitally generated by CampusConnect AI Accounts Gateway. No physical signature required.
+                </div>
+            `;
+
+            openModal("receipt-modal");
+        }
+    </script>
+</body>
+</html>

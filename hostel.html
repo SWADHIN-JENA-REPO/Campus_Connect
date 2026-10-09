@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect AI — Hostel Maintenance Helpdesk</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand-icon">🎓</div>
+                <div class="sidebar-brand-text">
+                    <h1>CampusConnect</h1>
+                    <span>AI Campus Life</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <span class="nav-section-title">Core Services</span>
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <span class="nav-icon">📈</span>
+                    <span>Attendance</span>
+                </a>
+                <a href="timetable.html" class="nav-link">
+                    <span class="nav-icon">📅</span>
+                    <span>Timetable</span>
+                </a>
+                <a href="requests.html" class="nav-link">
+                    <span class="nav-icon">📝</span>
+                    <span>Gate Pass &amp; Leave</span>
+                </a>
+                <a href="hostel.html" class="nav-link active">
+                    <span class="nav-icon">🏢</span>
+                    <span>Hostel Helpdesk</span>
+                </a>
+                <a href="mess-canteen.html" class="nav-link">
+                    <span class="nav-icon">🍲</span>
+                    <span>Mess &amp; Canteen</span>
+                </a>
+                <a href="fees.html" class="nav-link">
+                    <span class="nav-icon">💳</span>
+                    <span>Fees &amp; Dues</span>
+                </a>
+                <a href="notices.html" class="nav-link">
+                    <span class="nav-icon">📢</span>
+                    <span>Notices &amp; Events</span>
+                </a>
+
+                <span class="nav-section-title">Role Management</span>
+                <a href="admin.html" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Admin Portal</span>
+                </a>
+                <a href="login.html" class="nav-link">
+                    <span class="nav-icon">🔄</span>
+                    <span>Switch Role / Login</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-mini-profile">
+                    <div class="user-avatar current-user-avatar">AS</div>
+                    <div class="user-details">
+                        <div class="user-name current-user-name">Aarav Sharma</div>
+                        <span class="user-role-badge current-user-dept">Student (24CS042)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="top-nav-left">
+                    <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+                    <div class="page-title-crumb">
+                        <h2>Hostel Facilities &amp; Maintenance Helpdesk</h2>
+                        <span>Track repairs for Electricity, Plumbing, Wi-Fi, and Housekeeping</span>
+                    </div>
+                </div>
+                <div class="top-nav-right">
+                    <span class="role-switcher-pill">
+                        <span>👤 Role:</span>
+                        <strong class="current-user-role">Student</strong>
+                    </span>
+                    <button class="btn btn-outline btn-sm" onclick="switchUserRole('admin')">
+                        Switch to Admin
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content-wrapper">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Total Tickets</div>
+                            <div class="stat-value" id="hostel-stat-total">--</div>
+                            <div class="stat-sub">Lodged by your room</div>
+                        </div>
+                        <div class="stat-icon blue">📋</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Pending / Unassigned</div>
+                            <div class="stat-value" id="hostel-stat-pending">--</div>
+                            <div class="stat-sub">Awaiting warden dispatch</div>
+                        </div>
+                        <div class="stat-icon amber">⏳</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">In Progress</div>
+                            <div class="stat-value" id="hostel-stat-progress">--</div>
+                            <div class="stat-sub">Technician on site</div>
+                        </div>
+                        <div class="stat-icon blue">🔧</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Resolved</div>
+                            <div class="stat-value" id="hostel-stat-resolved">--</div>
+                            <div class="stat-sub">Work completed</div>
+                        </div>
+                        <div class="stat-icon green">✅</div>
+                    </div>
+                </div>
+
+                <!-- Complaint Submission Form Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🔧 Lodge New Maintenance Complaint</h3>
+                        <span class="text-muted" style="font-size: 0.75rem;">Automatic ticket generation &amp; supervisor routing</span>
+                    </div>
+
+                    <form id="complaint-form" onsubmit="handleComplaintSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="comp-category">Maintenance Category</label>
+                                <select id="comp-category" class="form-control" required>
+                                    <option value="Wi-Fi &amp; Network">📶 Wi-Fi &amp; Internet Connectivity</option>
+                                    <option value="Plumbing &amp; Water">🚿 Plumbing &amp; Washroom Water</option>
+                                    <option value="Electrical &amp; Lighting">⚡ Electrical, Fan &amp; Light Fitting</option>
+                                    <option value="Cleaning &amp; Hygiene">🧹 Room &amp; Corridor Cleaning</option>
+                                    <option value="Carpentry &amp; Furniture">🚪 Carpentry, Doors &amp; Study Table</option>
+                                    <option value="Water Purifier / RO">💧 Drinking Water RO Cooler</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="comp-priority">Priority Level</label>
+                                <select id="comp-priority" class="form-control" required>
+                                    <option value="Medium">Medium (Regular Maintenance)</option>
+                                    <option value="High">High (Impacting Daily Routine)</option>
+                                    <option value="Urgent">Urgent / Emergency (Safety / Water Leak)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="comp-block">Hostel Block</label>
+                                <input type="text" id="comp-block" class="form-control" value="Block B (Boys Hostel)" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="comp-room">Room Number</label>
+                                <input type="text" id="comp-room" class="form-control" value="B-204" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="comp-desc">Describe the Issue in Detail</label>
+                            <textarea id="comp-desc" class="form-control" placeholder="Provide clear details (e.g. washroom tap leaking constantly, router red light flashing since morning, etc.)..." required></textarea>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                            <button type="reset" class="btn btn-outline">Clear Fields</button>
+                            <button type="submit" class="btn btn-primary">
+                                🚀 Lodge Complaint &amp; Generate Ticket
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Complaint Tickets Tracker Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 Tracked Maintenance Tickets</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <select id="comp-status-filter" class="form-control" style="width: 140px; padding: 0.35rem 0.65rem;" onchange="renderTickets()">
+                                <option value="All">All Statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>Category</th>
+                                    <th>Priority</th>
+                                    <th>Room</th>
+                                    <th>Description</th>
+                                    <th>Lodged On</th>
+                                    <th>Status</th>
+                                    <th>Supervisor Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tickets-table-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="ai-assistant.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const activeUser = CampusData.getCurrentUser();
+            document.getElementById("comp-room").value = activeUser.roomNo || "B-204";
+            document.getElementById("comp-block").value = activeUser.hostel || "Block B (Boys Hostel)";
+            renderTickets();
+        });
+
+        function handleComplaintSubmit(e) {
+            e.preventDefault();
+            const desc = document.getElementById("comp-desc").value.trim();
+            if (!desc) {
+                showToast("Please enter a description for the problem.", "warning");
+                return;
+            }
+
+            const compObj = {
+                category: document.getElementById("comp-category").value,
+                priority: document.getElementById("comp-priority").value,
+                block: document.getElementById("comp-block").value,
+                room: document.getElementById("comp-room").value,
+                description: desc
+            };
+
+            const created = CampusData.addComplaint(compObj);
+            showToast(`Complaint lodged successfully! Ticket ID: ${created.id}`, "success");
+
+            document.getElementById("comp-desc").value = "";
+            renderTickets();
+        }
+
+        function renderTickets() {
+            const data = CampusData.getData();
+            const filter = document.getElementById("comp-status-filter").value;
+            const tbody = document.getElementById("tickets-table-body");
+
+            let list = data.hostelComplaints;
+
+            // Update stats
+            document.getElementById("hostel-stat-total").textContent = list.length;
+            document.getElementById("hostel-stat-pending").textContent = list.filter(t => t.status === "Pending").length;
+            document.getElementById("hostel-stat-progress").textContent = list.filter(t => t.status === "In Progress").length;
+            document.getElementById("hostel-stat-resolved").textContent = list.filter(t => t.status === "Resolved").length;
+
+            if (filter !== "All") {
+                list = list.filter(t => t.status === filter);
+            }
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">No maintenance tickets found for selected status.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = list.map(ticket => {
+                let prioBadge = '<span class="badge badge-neutral">Medium</span>';
+                if (ticket.priority === 'High') prioBadge = '<span class="badge badge-pending">High</span>';
+                if (ticket.priority === 'Urgent') prioBadge = '<span class="badge badge-urgent">Urgent</span>';
+
+                return `
+                    <tr>
+                        <td><strong>${ticket.id}</strong></td>
+                        <td><span class="badge badge-info">${ticket.category}</span></td>
+                        <td>${prioBadge}</td>
+                        <td>${ticket.room}</td>
+                        <td style="max-width: 250px;">${ticket.description}</td>
+                        <td style="font-size: 0.75rem; color: var(--text-muted);">${ticket.submittedOn}</td>
+                        <td>${getStatusBadge(ticket.status)}</td>
+                        <td style="font-size: 0.78rem; color: var(--text-muted);">${ticket.adminRemarks}</td>
+                    </tr>
+                `;
+            }).join("");
+        }
+    </script>
+</body>
+</html>

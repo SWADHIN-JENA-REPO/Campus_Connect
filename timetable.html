@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect AI — Weekly Academic Timetable</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 1.25rem;
+        }
+        .class-slot-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+        .class-slot-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .class-slot-card.practical {
+            border-left-color: #059669;
+        }
+        .class-slot-card.workshop {
+            border-left-color: #d97706;
+        }
+        .slot-time {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .slot-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+        }
+        .slot-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+        .slot-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.65rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand-icon">🎓</div>
+                <div class="sidebar-brand-text">
+                    <h1>CampusConnect</h1>
+                    <span>AI Campus Life</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <span class="nav-section-title">Core Services</span>
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <span class="nav-icon">📈</span>
+                    <span>Attendance</span>
+                </a>
+                <a href="timetable.html" class="nav-link active">
+                    <span class="nav-icon">📅</span>
+                    <span>Timetable</span>
+                </a>
+                <a href="requests.html" class="nav-link">
+                    <span class="nav-icon">📝</span>
+                    <span>Gate Pass &amp; Leave</span>
+                </a>
+                <a href="hostel.html" class="nav-link">
+                    <span class="nav-icon">🏢</span>
+                    <span>Hostel Helpdesk</span>
+                </a>
+                <a href="mess-canteen.html" class="nav-link">
+                    <span class="nav-icon">🍲</span>
+                    <span>Mess &amp; Canteen</span>
+                </a>
+                <a href="fees.html" class="nav-link">
+                    <span class="nav-icon">💳</span>
+                    <span>Fees &amp; Dues</span>
+                </a>
+                <a href="notices.html" class="nav-link">
+                    <span class="nav-icon">📢</span>
+                    <span>Notices &amp; Events</span>
+                </a>
+
+                <span class="nav-section-title">Role Management</span>
+                <a href="admin.html" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Admin Portal</span>
+                </a>
+                <a href="login.html" class="nav-link">
+                    <span class="nav-icon">🔄</span>
+                    <span>Switch Role / Login</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-mini-profile">
+                    <div class="user-avatar current-user-avatar">AS</div>
+                    <div class="user-details">
+                        <div class="user-name current-user-name">Aarav Sharma</div>
+                        <span class="user-role-badge current-user-dept">Student (24CS042)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="top-nav-left">
+                    <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+                    <div class="page-title-crumb">
+                        <h2>Weekly Academic Timetable</h2>
+                        <span>B.Tech Computer Science &amp; Eng. · Semester 3 (Batch 2024-2028)</span>
+                    </div>
+                </div>
+                <div class="top-nav-right">
+                    <button class="btn btn-primary btn-sm" onclick="openModal('add-class-modal')">
+                        ➕ Add / Edit Class Slot
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="switchUserRole('admin')">
+                        Switch to Admin
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content-wrapper">
+                <!-- Day Filter Tabs -->
+                <div class="tab-nav" id="day-tabs">
+                    <button class="tab-btn active" onclick="filterByDay('All')">All Days</button>
+                    <button class="tab-btn" onclick="filterByDay('Monday')">Monday</button>
+                    <button class="tab-btn" onclick="filterByDay('Tuesday')">Tuesday</button>
+                    <button class="tab-btn" onclick="filterByDay('Wednesday')">Wednesday</button>
+                    <button class="tab-btn" onclick="filterByDay('Thursday')">Thursday</button>
+                    <button class="tab-btn" onclick="filterByDay('Friday')">Friday</button>
+                    <button class="tab-btn" onclick="filterByDay('Saturday')">Saturday</button>
+                </div>
+
+                <!-- Controls & Search -->
+                <div class="card" style="padding: 1rem; margin-bottom: 1.5rem;">
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; gap: 0.5rem; flex: 1; min-width: 260px;">
+                            <input type="text" id="tt-search-input" class="form-control" placeholder="Search subject, faculty, or room..." oninput="renderTimetable()">
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <label class="form-label" style="margin: 0; white-space: nowrap;" for="tt-type-filter">Type:</label>
+                            <select id="tt-type-filter" class="form-control" style="width: 140px;" onchange="renderTimetable()">
+                                <option value="All">All Types</option>
+                                <option value="Lecture">Lecture</option>
+                                <option value="Practical">Practical Lab</option>
+                                <option value="Workshop">Workshop</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timetable Slot Cards Grid -->
+                <div class="timetable-grid" id="tt-grid-container">
+                    <!-- Dynamic class cards -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Class Modal -->
+    <div class="modal-overlay" id="add-class-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>📅 Add / Update Class Schedule Slot</h3>
+                <button class="modal-close-btn" onclick="closeModal('add-class-modal')">×</button>
+            </div>
+            <form onsubmit="handleAddClassSubmit(event)">
+                <div class="modal-body">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Administrators and academic coordinators can add lecture or lab slots to the batch timetable.
+                    </p>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="new-class-day">Day of Week</label>
+                            <select id="new-class-day" class="form-control" required>
+                                <option value="Monday">Monday</option>
+                                <option value="Tuesday">Tuesday</option>
+                                <option value="Wednesday">Wednesday</option>
+                                <option value="Thursday">Thursday</option>
+                                <option value="Friday">Friday</option>
+                                <option value="Saturday">Saturday</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="new-class-time">Time Slot</label>
+                            <input type="text" id="new-class-time" class="form-control" placeholder="e.g. 02:00 PM - 03:00 PM" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="new-class-code">Course Code</label>
+                            <input type="text" id="new-class-code" class="form-control" placeholder="e.g. CS305" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="new-class-type">Session Type</label>
+                            <select id="new-class-type" class="form-control">
+                                <option value="Lecture">Lecture</option>
+                                <option value="Practical">Practical Lab</option>
+                                <option value="Workshop">Workshop / Seminar</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="new-class-subject">Course Name / Subject</label>
+                        <input type="text" id="new-class-subject" class="form-control" placeholder="e.g. Computer Networks" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="new-class-room">Classroom / Lab Hall</label>
+                            <input type="text" id="new-class-room" class="form-control" placeholder="e.g. LH-201 or NetLab" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="new-class-faculty">Faculty In-Charge</label>
+                            <input type="text" id="new-class-faculty" class="form-control" placeholder="e.g. Dr. Rajesh Mehra" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('add-class-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Schedule Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="ai-assistant.js"></script>
+    <script>
+        let selectedDay = "All";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const today = days[new Date().getDay()];
+            if (today !== "Sunday") {
+                filterByDay(today);
+            } else {
+                renderTimetable();
+            }
+        });
+
+        function filterByDay(day) {
+            selectedDay = day;
+            const buttons = document.querySelectorAll("#day-tabs .tab-btn");
+            buttons.forEach(btn => {
+                if (btn.textContent.trim().toLowerCase() === day.toLowerCase() || (day === "All" && btn.textContent.includes("All"))) {
+                    btn.classList.add("active");
+                } else {
+                    btn.classList.remove("active");
+                }
+            });
+            renderTimetable();
+        }
+
+        function renderTimetable() {
+            const data = CampusData.getData();
+            const search = (document.getElementById("tt-search-input").value || "").toLowerCase().trim();
+            const typeFilter = document.getElementById("tt-type-filter").value;
+            const container = document.getElementById("tt-grid-container");
+
+            let filtered = data.timetable;
+
+            if (selectedDay !== "All") {
+                filtered = filtered.filter(item => item.day.toLowerCase() === selectedDay.toLowerCase());
+            }
+
+            if (typeFilter !== "All") {
+                filtered = filtered.filter(item => item.type === typeFilter);
+            }
+
+            if (search) {
+                filtered = filtered.filter(item => 
+                    item.subject.toLowerCase().includes(search) ||
+                    item.code.toLowerCase().includes(search) ||
+                    item.faculty.toLowerCase().includes(search) ||
+                    item.room.toLowerCase().includes(search)
+                );
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; padding: 3rem 1rem; text-align: center; background: white; border-radius: var(--radius-md); border: 1px dashed var(--border-color);">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📅</div>
+                        <h4 style="color: var(--text-main); font-weight: 700;">No Classes Found</h4>
+                        <p style="color: var(--text-muted); font-size: 0.85rem;">No timetable schedule matches the selected filters for ${selectedDay}.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(slot => {
+                const typeClass = (slot.type || "").toLowerCase();
+                return `
+                    <div class="class-slot-card ${typeClass}">
+                        <div style="display: space-between; align-items: flex-start; display: flex; justify-content: space-between;">
+                            <div class="slot-time">
+                                <span>⏰</span> <span>${slot.time}</span>
+                            </div>
+                            <span class="badge ${slot.type === 'Practical' ? 'badge-approved' : (slot.type === 'Workshop' ? 'badge-pending' : 'badge-info')}">
+                                ${slot.type}
+                            </span>
+                        </div>
+                        <div class="slot-title">${slot.subject}</div>
+                        <div class="slot-meta">Course Code: <strong>${slot.code}</strong> · Day: <strong>${slot.day}</strong></div>
+                        <div style="font-size: 0.8rem; color: var(--text-main); margin-bottom: 0.5rem;">
+                            👨‍🏫 Faculty: <strong>${slot.faculty}</strong>
+                        </div>
+                        <div class="slot-footer">
+                            <span class="badge badge-neutral">📍 Room: ${slot.room}</span>
+                            <button class="btn btn-outline btn-sm" style="color: var(--danger); border-color: #fecaca;" onclick="deleteClassSlot('${slot.id}')" title="Delete slot">
+                                🗑️ Remove
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function handleAddClassSubmit(e) {
+            e.preventDefault();
+            const entry = {
+                day: document.getElementById("new-class-day").value,
+                time: document.getElementById("new-class-time").value,
+                code: document.getElementById("new-class-code").value,
+                subject: document.getElementById("new-class-subject").value,
+                room: document.getElementById("new-class-room").value,
+                faculty: document.getElementById("new-class-faculty").value,
+                type: document.getElementById("new-class-type").value
+            };
+
+            CampusData.addTimetableEntry(entry);
+            showToast(`Added ${entry.subject} on ${entry.day} successfully!`, "success");
+            closeModal("add-class-modal");
+            renderTimetable();
+        }
+
+        function deleteClassSlot(id) {
+            if (confirm("Are you sure you want to remove this timetable entry?")) {
+                CampusData.deleteTimetableEntry(id);
+                showToast("Timetable entry removed.", "info");
+                renderTimetable();
+            }
+        }
+    </script>
+</body>
+</html>

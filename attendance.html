@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect AI — Attendance Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand-icon">🎓</div>
+                <div class="sidebar-brand-text">
+                    <h1>CampusConnect</h1>
+                    <span>AI Campus Life</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <span class="nav-section-title">Core Services</span>
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="attendance.html" class="nav-link active">
+                    <span class="nav-icon">📈</span>
+                    <span>Attendance</span>
+                </a>
+                <a href="timetable.html" class="nav-link">
+                    <span class="nav-icon">📅</span>
+                    <span>Timetable</span>
+                </a>
+                <a href="requests.html" class="nav-link">
+                    <span class="nav-icon">📝</span>
+                    <span>Gate Pass &amp; Leave</span>
+                </a>
+                <a href="hostel.html" class="nav-link">
+                    <span class="nav-icon">🏢</span>
+                    <span>Hostel Helpdesk</span>
+                </a>
+                <a href="mess-canteen.html" class="nav-link">
+                    <span class="nav-icon">🍲</span>
+                    <span>Mess &amp; Canteen</span>
+                </a>
+                <a href="fees.html" class="nav-link">
+                    <span class="nav-icon">💳</span>
+                    <span>Fees &amp; Dues</span>
+                </a>
+                <a href="notices.html" class="nav-link">
+                    <span class="nav-icon">📢</span>
+                    <span>Notices &amp; Events</span>
+                </a>
+
+                <span class="nav-section-title">Role Management</span>
+                <a href="admin.html" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Admin Portal</span>
+                </a>
+                <a href="login.html" class="nav-link">
+                    <span class="nav-icon">🔄</span>
+                    <span>Switch Role / Login</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-mini-profile">
+                    <div class="user-avatar current-user-avatar">AS</div>
+                    <div class="user-details">
+                        <div class="user-name current-user-name">Aarav Sharma</div>
+                        <span class="user-role-badge current-user-dept">Student (24CS042)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="top-nav-left">
+                    <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+                    <div class="page-title-crumb">
+                        <h2>Attendance Overview</h2>
+                        <span>Subject-wise breakdown &amp; compliance status</span>
+                    </div>
+                </div>
+                <div class="top-nav-right">
+                    <span class="role-switcher-pill">
+                        <span>👤 Role:</span>
+                        <strong class="current-user-role">Student</strong>
+                    </span>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('admin-attendance-modal')">
+                        ✏️ Admin Edit Entry
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="switchUserRole('admin')">
+                        Switch to Admin
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content-wrapper">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Overall Attendance</div>
+                            <div class="stat-value" id="att-overall-pct">--%</div>
+                            <div class="stat-sub" id="att-overall-sub">75% Mandatory for Exams</div>
+                        </div>
+                        <div class="stat-icon blue">📈</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Lectures Attended</div>
+                            <div class="stat-value" id="att-total-attended">--</div>
+                            <div class="stat-sub">Present in class sessions</div>
+                        </div>
+                        <div class="stat-icon green">✅</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Total Held</div>
+                            <div class="stat-value" id="att-total-held">--</div>
+                            <div class="stat-sub">Total conducted this term</div>
+                        </div>
+                        <div class="stat-icon amber">📚</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <div class="stat-label">Absences</div>
+                            <div class="stat-value" id="att-total-missed">--</div>
+                            <div class="stat-sub">Lectures missed</div>
+                        </div>
+                        <div class="stat-icon rose">⚠️</div>
+                    </div>
+                </div>
+
+                <!-- Warning Notice Box (if any subject < 75%) -->
+                <div id="att-alert-box" style="display: none; margin-bottom: 1.5rem; background: #fff1f2; border-left: 4px solid var(--danger); padding: 1rem 1.25rem; border-radius: var(--radius-sm);">
+                    <div style="font-weight: 700; color: #9f1239; margin-bottom: 0.25rem;">⚠️ Attendance Shortage Warning</div>
+                    <div id="att-alert-text" style="font-size: 0.825rem; color: #881337;"></div>
+                </div>
+
+                <!-- Subject-wise Attendance Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 Subject-wise Lecture Breakdown</h3>
+                        <div class="header-action">
+                            <span class="badge badge-info">Semester 3 Curriculum</span>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Subject Code</th>
+                                    <th>Subject &amp; Faculty</th>
+                                    <th>Attended / Total</th>
+                                    <th style="width: 250px;">Attendance Progress</th>
+                                    <th>Percentage</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="att-table-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Attendance Simulator / Bunk Calculator -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🧮 Interactive Attendance Simulator</h3>
+                        <span class="text-muted" style="font-size: 0.8rem;">Forecast your attendance percentage before missing or attending classes</span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="sim-subject">Select Subject</label>
+                            <select id="sim-subject" class="form-control" onchange="runSimulation()">
+                                <!-- Dynamically populated -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sim-attend-next">Upcoming Classes I Will Attend</label>
+                            <input type="number" id="sim-attend-next" class="form-control" value="3" min="0" oninput="runSimulation()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sim-miss-next">Upcoming Classes I Will Miss</label>
+                            <input type="number" id="sim-miss-next" class="form-control" value="0" min="0" oninput="runSimulation()">
+                        </div>
+                    </div>
+
+                    <div id="sim-result-box" style="background: #f8fafc; border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between; flex-wrap: gap;">
+                        <div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Simulated Projected Attendance:</div>
+                            <div id="sim-projected-pct" style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">--%</div>
+                        </div>
+                        <div id="sim-verdict" style="font-size: 0.85rem; font-weight: 600;">
+                            <!-- Projected status advice -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Admin Attendance Quick Entry Modal -->
+    <div class="modal-overlay" id="admin-attendance-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>✏️ Admin Attendance Update</h3>
+                <button class="modal-close-btn" onclick="closeModal('admin-attendance-modal')">×</button>
+            </div>
+            <form onsubmit="handleAdminAttendanceSubmit(event)">
+                <div class="modal-body">
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Update student lecture records directly. Changes synchronize immediately across student dashboards and AI knowledge responses.
+                    </p>
+                    <div class="form-group">
+                        <label class="form-label" for="admin-att-student">Student</label>
+                        <input type="text" id="admin-att-student" class="form-control" value="Aarav Sharma (24CS042 - CSE 3rd Sem)" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="admin-att-subject">Subject</label>
+                        <select id="admin-att-subject" class="form-control" onchange="populateAdminAttInputs()" required>
+                            <!-- Dynamically loaded -->
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="admin-att-attended">Attended Lectures</label>
+                            <input type="number" id="admin-att-attended" class="form-control" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="admin-att-total">Total Conducted</label>
+                            <input type="number" id="admin-att-total" class="form-control" min="1" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('admin-attendance-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Attendance Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="ai-assistant.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            loadAttendanceData();
+        });
+
+        function loadAttendanceData() {
+            const data = CampusData.getData();
+            const list = data.attendance;
+
+            let totalAttended = 0;
+            let totalHeld = 0;
+            let lowAlerts = [];
+
+            const tbody = document.getElementById("att-table-body");
+            const simSelect = document.getElementById("sim-subject");
+            const adminSelect = document.getElementById("admin-att-subject");
+
+            tbody.innerHTML = "";
+            simSelect.innerHTML = "";
+            adminSelect.innerHTML = "";
+
+            list.forEach(item => {
+                totalAttended += item.attended;
+                totalHeld += item.total;
+
+                const pct = ((item.attended / item.total) * 100).toFixed(1);
+                const isGood = parseFloat(pct) >= 75;
+
+                if (!isGood) {
+                    const needed = Math.max(1, Math.ceil((0.75 * item.total - item.attended) / 0.25));
+                    lowAlerts.push(`<strong>${item.subject} (${pct}%)</strong>: Attend the next <strong>${needed}</strong> consecutive classes to cross 75%.`);
+                }
+
+                const progressClass = isGood ? "good" : (pct >= 65 ? "warning" : "danger");
+                const badgeStatus = isGood ? `<span class="badge badge-good">● Good Standing</span>` : `<span class="badge badge-low">● Shortage (&lt;75%)</span>`;
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${item.code}</strong></td>
+                    <td>
+                        <div style="font-weight: 600;">${item.subject}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${item.faculty}</div>
+                    </td>
+                    <td><strong>${item.attended}</strong> / ${item.total}</td>
+                    <td>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 2px;">Target: 75%</div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill ${progressClass}" style="width: ${Math.min(100, pct)}%;"></div>
+                        </div>
+                    </td>
+                    <td><strong style="font-size: 0.95rem; color: ${isGood ? 'var(--success)' : 'var(--danger)'};">${pct}%</strong></td>
+                    <td>${badgeStatus}</td>
+                    <td>
+                        <button class="btn btn-outline btn-sm" onclick="openAdminForSubject('${item.code}')">Edit</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+
+                // Populate selects
+                const opt1 = document.createElement("option");
+                opt1.value = item.code;
+                opt1.textContent = `${item.subject} (${pct}%)`;
+                simSelect.appendChild(opt1);
+
+                const opt2 = document.createElement("option");
+                opt2.value = item.code;
+                opt2.textContent = `${item.code} — ${item.subject}`;
+                adminSelect.appendChild(opt2);
+            });
+
+            // Summary metrics
+            const overallPct = totalHeld > 0 ? ((totalAttended / totalHeld) * 100).toFixed(1) : 0;
+            document.getElementById("att-overall-pct").textContent = `${overallPct}%`;
+            document.getElementById("att-total-attended").textContent = totalAttended;
+            document.getElementById("att-total-held").textContent = totalHeld;
+            document.getElementById("att-total-missed").textContent = (totalHeld - totalAttended);
+
+            // Alert Box
+            const alertBox = document.getElementById("att-alert-box");
+            const alertText = document.getElementById("att-alert-text");
+            if (lowAlerts.length > 0) {
+                alertBox.style.display = "block";
+                alertText.innerHTML = lowAlerts.join("<br>");
+            } else {
+                alertBox.style.display = "none";
+            }
+
+            runSimulation();
+            populateAdminAttInputs();
+        }
+
+        function runSimulation() {
+            const data = CampusData.getData();
+            const subCode = document.getElementById("sim-subject").value;
+            const sub = data.attendance.find(s => s.code === subCode);
+            if (!sub) return;
+
+            const attendNext = parseInt(document.getElementById("sim-attend-next").value || 0, 10);
+            const missNext = parseInt(document.getElementById("sim-miss-next").value || 0, 10);
+
+            const newAttended = sub.attended + attendNext;
+            const newTotal = sub.total + attendNext + missNext;
+
+            const projPct = ((newAttended / newTotal) * 100).toFixed(1);
+            document.getElementById("sim-projected-pct").textContent = `${projPct}%`;
+
+            const verdictEl = document.getElementById("sim-verdict");
+            if (projPct >= 75) {
+                verdictEl.innerHTML = `<span style="color: var(--success);">✅ Safe: Meets examination criteria</span>`;
+            } else {
+                verdictEl.innerHTML = `<span style="color: var(--danger);">⚠️ Warning: Below 75% threshold</span>`;
+            }
+        }
+
+        function openAdminForSubject(code) {
+            document.getElementById("admin-att-subject").value = code;
+            populateAdminAttInputs();
+            openModal("admin-attendance-modal");
+        }
+
+        function populateAdminAttInputs() {
+            const data = CampusData.getData();
+            const code = document.getElementById("admin-att-subject").value;
+            const sub = data.attendance.find(s => s.code === code);
+            if (sub) {
+                document.getElementById("admin-att-attended").value = sub.attended;
+                document.getElementById("admin-att-total").value = sub.total;
+            }
+        }
+
+        function handleAdminAttendanceSubmit(e) {
+            e.preventDefault();
+            const code = document.getElementById("admin-att-subject").value;
+            const attended = document.getElementById("admin-att-attended").value;
+            const total = document.getElementById("admin-att-total").value;
+
+            if (parseInt(attended, 10) > parseInt(total, 10)) {
+                showToast("Attended lectures cannot exceed total conducted lectures!", "error");
+                return;
+            }
+
+            const res = CampusData.updateAttendance(code, attended, total);
+            if (res) {
+                showToast(`Updated attendance for ${res.subject.subject} to ${attended}/${total}!`, "success");
+                closeModal("admin-attendance-modal");
+                loadAttendanceData();
+            }
+        }
+    </script>
+</body>
+</html>

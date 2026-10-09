@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect AI — Sign In &amp; Register Account</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .login-page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0369a1 100%);
+            padding: 1.5rem;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 520px;
+            background: #ffffff;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            padding: 2.25rem;
+            animation: modalSlide 0.3s ease-out;
+        }
+        .login-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-bottom: 1.25rem;
+            justify-content: center;
+        }
+        .login-brand-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2563eb, #0284c7);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        }
+        .auth-nav-tabs {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: var(--radius-md);
+            padding: 0.35rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border-color);
+        }
+        .auth-tab-btn {
+            flex: 1;
+            padding: 0.65rem 0.5rem;
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .auth-tab-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .role-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+        .role-select-btn {
+            background: #f8fafc;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 0.85rem 0.65rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .role-select-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        .role-select-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+        .role-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+        .role-title {
+            font-weight: 700;
+            font-size: 0.825rem;
+            color: var(--text-main);
+            display: block;
+        }
+        .role-subtitle {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            display: block;
+        }
+        .demo-notice {
+            background: #eff6ff;
+            border-left: 3px solid var(--primary);
+            padding: 0.65rem 0.85rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            color: #1e40af;
+            margin-bottom: 1.25rem;
+            line-height: 1.4;
+        }
+        .admin-security-box {
+            background: #fff1f2;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-sm);
+            padding: 0.85rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page-wrapper">
+        <div class="login-container">
+            <!-- Brand -->
+            <div class="login-brand">
+                <div class="login-brand-icon">🎓</div>
+                <div>
+                    <h1 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin: 0;">CampusConnect AI</h1>
+                    <span style="font-size: 0.75rem; color: #64748b; font-weight: 600;">Smart Campus Life System</span>
+                </div>
+            </div>
+
+            <!-- Tab Switcher: Sign In vs. Create Account -->
+            <div class="auth-nav-tabs">
+                <button type="button" class="auth-tab-btn active" id="tab-login" onclick="switchAuthTab('login')">
+                    🔐 Sign In
+                </button>
+                <button type="button" class="auth-tab-btn" id="tab-register" onclick="switchAuthTab('register')">
+                    ✨ Create Account
+                </button>
+            </div>
+
+            <!-- TAB 1: SIGN IN FORM -->
+            <div id="auth-panel-login">
+                <div class="demo-notice">
+                    💡 <strong>Quick Demo Access:</strong> Choose your role below to auto-fill credentials, or type your registered email and password.
+                </div>
+
+                <label class="form-label">Select Login Role:</label>
+                <div class="role-cards-grid">
+                    <div class="role-select-btn selected" id="role-btn-student" onclick="chooseLoginRole('student')">
+                        <span class="role-icon">👨‍🎓</span>
+                        <span class="role-title">Student</span>
+                        <span class="role-subtitle">Aarav Sharma (CSE)</span>
+                    </div>
+                    <div class="role-select-btn" id="role-btn-admin" onclick="chooseLoginRole('admin')">
+                        <span class="role-icon">👩‍💼</span>
+                        <span class="role-title">Administrator</span>
+                        <span class="role-subtitle">Dr. Sunita Raman</span>
+                    </div>
+                </div>
+
+                <form id="login-form" onsubmit="handleLoginSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="login-email">Campus ID / Email Address</label>
+                        <input type="email" id="login-email" class="form-control" value="aarav.cs24@campus.edu" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="login-password">Password</label>
+                        <div class="password-field-wrapper">
+                            <input type="password" id="login-password" class="form-control" value="student123" required>
+                            <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('login-password')" title="Show/Hide Password">👁️</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 0.75rem;">
+                        Sign In to CampusConnect →
+                    </button>
+                </form>
+            </div>
+
+            <!-- TAB 2: CREATE ACCOUNT FORM -->
+            <div id="auth-panel-register" style="display: none;">
+                <div class="demo-notice" style="background: #ecfdf5; border-color: var(--success); color: #065f46;">
+                    📝 <strong>Account Registration:</strong> Registered profiles are stored securely in browser `localStorage`.
+                </div>
+
+                <label class="form-label">Select Account Type to Create:</label>
+                <div class="role-cards-grid">
+                    <div class="role-select-btn selected" id="reg-role-btn-student" onclick="chooseRegisterRole('student')">
+                        <span class="role-icon">👨‍🎓</span>
+                        <span class="role-title">Student Profile</span>
+                        <span class="role-subtitle">Academic &amp; Hostel Life</span>
+                    </div>
+                    <div class="role-select-btn" id="reg-role-btn-admin" onclick="chooseRegisterRole('admin')">
+                        <span class="role-icon">🛡️</span>
+                        <span class="role-title">Staff / Admin</span>
+                        <span class="role-subtitle">Requires Master Key</span>
+                    </div>
+                </div>
+
+                <!-- Admin Security Authorization Field (Displayed only when Staff is selected) -->
+                <div id="admin-security-prompt" class="admin-security-box" style="display: none;">
+                    <div style="font-size: 0.78rem; font-weight: 700; color: #991b1b; margin-bottom: 0.35rem;">
+                        🔒 Staff Master Security Verification
+                    </div>
+                    <div style="font-size: 0.72rem; color: #7f1d1d; margin-bottom: 0.5rem;">
+                        Only verified university faculty and administrators may create an admin profile. Enter the institutional security key:
+                    </div>
+                    <div class="password-field-wrapper">
+                        <input type="password" id="reg-admin-passcode" class="form-control" placeholder="Enter Admin Master Passcode (Demo: ADMIN@CAMPUS2026)">
+                        <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('reg-admin-passcode')">👁️</button>
+                    </div>
+                </div>
+
+                <form id="register-form" onsubmit="handleRegisterSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="reg-name">Full Name</label>
+                        <input type="text" id="reg-name" class="form-control" placeholder="e.g. Rahul Verma" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="reg-email">Email / Campus ID</label>
+                            <input type="email" id="reg-email" class="form-control" placeholder="e.g. rahul.v@campus.edu" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="reg-identifier" id="lbl-identifier">Student Roll Number</label>
+                            <input type="text" id="reg-identifier" class="form-control" placeholder="e.g. 24CS109" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="reg-dept">Department / Program</label>
+                            <input type="text" id="reg-dept" class="form-control" placeholder="e.g. B.Tech Computer Science" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="reg-room" id="lbl-room">Hostel Block &amp; Room</label>
+                            <input type="text" id="reg-room" class="form-control" placeholder="e.g. Block B - 302" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="reg-password">Password</label>
+                            <div class="password-field-wrapper">
+                                <input type="password" id="reg-password" class="form-control" placeholder="Min. 6 chars" required>
+                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('reg-password')">👁️</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="reg-confirm-password">Confirm Password</label>
+                            <div class="password-field-wrapper">
+                                <input type="password" id="reg-confirm-password" class="form-control" placeholder="Re-type password" required>
+                                <button type="button" class="pwd-toggle-btn" onclick="togglePasswordVisibility('reg-confirm-password')">👁️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-block" style="padding: 0.75rem;">
+                        ✨ Create Account &amp; Log In →
+                    </button>
+                </form>
+            </div>
+
+            <!-- Footer Tools -->
+            <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="quickResetData()">
+                    🔄 Reset Factory Seed
+                </button>
+                <a href="index.html" style="font-size: 0.78rem; font-weight: 600;">
+                    Guest Dashboard Preview →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="ai-assistant.js"></script>
+    <script>
+        let currentLoginRole = 'student';
+        let currentRegisterRole = 'student';
+
+        function switchAuthTab(tab) {
+            const loginBtn = document.getElementById("tab-login");
+            const regBtn = document.getElementById("tab-register");
+            const loginPanel = document.getElementById("auth-panel-login");
+            const regPanel = document.getElementById("auth-panel-register");
+
+            if (tab === 'login') {
+                loginBtn.classList.add("active");
+                regBtn.classList.remove("active");
+                loginPanel.style.display = "block";
+                regPanel.style.display = "none";
+            } else {
+                regBtn.classList.add("active");
+                loginBtn.classList.remove("active");
+                regPanel.style.display = "block";
+                loginPanel.style.display = "none";
+            }
+        }
+
+        function chooseLoginRole(role) {
+            currentLoginRole = role;
+            const studentBtn = document.getElementById("role-btn-student");
+            const adminBtn = document.getElementById("role-btn-admin");
+            const emailInput = document.getElementById("login-email");
+            const passInput = document.getElementById("login-password");
+
+            if (role === 'student') {
+                studentBtn.classList.add("selected");
+                adminBtn.classList.remove("selected");
+                emailInput.value = "aarav.cs24@campus.edu";
+                passInput.value = "student123";
+            } else {
+                adminBtn.classList.add("selected");
+                studentBtn.classList.remove("selected");
+                emailInput.value = "dean.affairs@campus.edu";
+                passInput.value = "admin123";
+            }
+        }
+
+        function chooseRegisterRole(role) {
+            currentRegisterRole = role;
+            const stuBtn = document.getElementById("reg-role-btn-student");
+            const admBtn = document.getElementById("reg-role-btn-admin");
+            const lblIdentifier = document.getElementById("lbl-identifier");
+            const lblRoom = document.getElementById("lbl-room");
+            const adminPrompt = document.getElementById("admin-security-prompt");
+            const adminPasscodeField = document.getElementById("reg-admin-passcode");
+
+            if (role === 'student') {
+                stuBtn.classList.add("selected");
+                admBtn.classList.remove("selected");
+                lblIdentifier.textContent = "Student Roll Number";
+                lblRoom.textContent = "Hostel Block & Room";
+                document.getElementById("reg-identifier").placeholder = "e.g. 24CS109";
+                document.getElementById("reg-room").placeholder = "e.g. Block B - 302";
+                adminPrompt.style.display = "none";
+                adminPasscodeField.required = false;
+            } else {
+                admBtn.classList.add("selected");
+                stuBtn.classList.remove("selected");
+                lblIdentifier.textContent = "Staff / Admin ID";
+                lblRoom.textContent = "Department Office Room";
+                document.getElementById("reg-identifier").placeholder = "e.g. ADM-204";
+                document.getElementById("reg-room").placeholder = "e.g. Admin Block 104";
+                adminPrompt.style.display = "block";
+                adminPasscodeField.required = true;
+                adminPasscodeField.focus();
+            }
+        }
+
+        function togglePasswordVisibility(fieldId) {
+            const input = document.getElementById(fieldId);
+            if (!input) return;
+            if (input.type === "password") {
+                input.type = "text";
+            } else {
+                input.type = "password";
+            }
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById("login-email").value.trim();
+            const password = document.getElementById("login-password").value;
+
+            const res = CampusData.authenticateUser(email, password, currentLoginRole);
+            if (res.success) {
+                showToast(`Authenticated as ${res.user.name}!`, "success");
+                setTimeout(() => {
+                    if (currentLoginRole === 'admin') {
+                        window.location.href = "admin.html";
+                    } else {
+                        window.location.href = "index.html";
+                    }
+                }, 350);
+            } else {
+                showToast(res.message || "Invalid credentials for this role.", "error");
+            }
+        }
+
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const pass = document.getElementById("reg-password").value;
+            const confirmPass = document.getElementById("reg-confirm-password").value;
+
+            if (pass !== confirmPass) {
+                showToast("Passwords do not match. Please re-check.", "error");
+                return;
+            }
+
+            if (pass.length < 6) {
+                showToast("Password must be at least 6 characters long.", "warning");
+                return;
+            }
+
+            const regData = {
+                name: document.getElementById("reg-name").value.trim(),
+                email: document.getElementById("reg-email").value.trim(),
+                password: pass,
+                role: currentRegisterRole,
+                rollNo: document.getElementById("reg-identifier").value.trim(),
+                program: document.getElementById("reg-dept").value.trim(),
+                roomNo: document.getElementById("reg-room").value.trim(),
+                hostel: document.getElementById("reg-room").value.trim(),
+                adminPasscode: document.getElementById("reg-admin-passcode") ? document.getElementById("reg-admin-passcode").value : ""
+            };
+
+            const res = CampusData.registerUser(regData);
+            if (res.success) {
+                showToast(`Welcome to CampusConnect, ${res.user.name}!`, "success");
+                setTimeout(() => {
+                    if (currentRegisterRole === 'admin') {
+                        window.location.href = "admin.html";
+                    } else {
+                        window.location.href = "index.html";
+                    }
+                }, 400);
+            } else {
+                showToast(res.message, "error");
+            }
+        }
+
+        function quickResetData() {
+            CampusData.resetData();
+            showToast("Demo data reset to factory initial state!", "info");
+            chooseLoginRole('student');
+        }
+    </script>
+</body>
+</html>

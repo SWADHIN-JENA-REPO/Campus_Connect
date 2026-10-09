@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect AI — Mess &amp; Canteen Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .meal-timing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .meal-slot-pill {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+        .meal-slot-pill.active-now {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+        }
+        .menu-meals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+        .meal-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .canteen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+        .canteen-item-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand-icon">🎓</div>
+                <div class="sidebar-brand-text">
+                    <h1>CampusConnect</h1>
+                    <span>AI Campus Life</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <span class="nav-section-title">Core Services</span>
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <span class="nav-icon">📈</span>
+                    <span>Attendance</span>
+                </a>
+                <a href="timetable.html" class="nav-link">
+                    <span class="nav-icon">📅</span>
+                    <span>Timetable</span>
+                </a>
+                <a href="requests.html" class="nav-link">
+                    <span class="nav-icon">📝</span>
+                    <span>Gate Pass &amp; Leave</span>
+                </a>
+                <a href="hostel.html" class="nav-link">
+                    <span class="nav-icon">🏢</span>
+                    <span>Hostel Helpdesk</span>
+                </a>
+                <a href="mess-canteen.html" class="nav-link active">
+                    <span class="nav-icon">🍲</span>
+                    <span>Mess &amp; Canteen</span>
+                </a>
+                <a href="fees.html" class="nav-link">
+                    <span class="nav-icon">💳</span>
+                    <span>Fees &amp; Dues</span>
+                </a>
+                <a href="notices.html" class="nav-link">
+                    <span class="nav-icon">📢</span>
+                    <span>Notices &amp; Events</span>
+                </a>
+
+                <span class="nav-section-title">Role Management</span>
+                <a href="admin.html" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Admin Portal</span>
+                </a>
+                <a href="login.html" class="nav-link">
+                    <span class="nav-icon">🔄</span>
+                    <span>Switch Role / Login</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-mini-profile">
+                    <div class="user-avatar current-user-avatar">AS</div>
+                    <div class="user-details">
+                        <div class="user-name current-user-name">Aarav Sharma</div>
+                        <span class="user-role-badge current-user-dept">Student (24CS042)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="top-nav-left">
+                    <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+                    <div class="page-title-crumb">
+                        <h2>Mess Schedule &amp; Campus Canteen</h2>
+                        <span>Daily menu, operating hours, and food quality monitoring</span>
+                    </div>
+                </div>
+                <div class="top-nav-right">
+                    <span class="role-switcher-pill">
+                        <span>👤 Role:</span>
+                        <strong class="current-user-role">Student</strong>
+                    </span>
+                    <button class="btn btn-outline btn-sm" onclick="switchUserRole('admin')">
+                        Switch to Admin
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content-wrapper">
+                <!-- Meal Timings Banner -->
+                <div class="meal-timing-grid">
+                    <div class="meal-slot-pill" id="pill-breakfast">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">☕</div>
+                        <div style="font-weight: 700; font-size: 0.9rem;">Breakfast</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">07:30 AM - 09:30 AM</div>
+                    </div>
+                    <div class="meal-slot-pill" id="pill-lunch">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🍛</div>
+                        <div style="font-weight: 700; font-size: 0.9rem;">Lunch</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">12:30 PM - 02:30 PM</div>
+                    </div>
+                    <div class="meal-slot-pill" id="pill-snacks">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🥪</div>
+                        <div style="font-weight: 700; font-size: 0.9rem;">Evening Snacks</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">04:30 PM - 06:00 PM</div>
+                    </div>
+                    <div class="meal-slot-pill" id="pill-dinner">
+                        <div style="font-size: 1.5rem; margin-bottom: 0.25rem;">🍲</div>
+                        <div style="font-weight: 700; font-size: 0.9rem;">Dinner</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">07:30 PM - 09:30 PM</div>
+                    </div>
+                </div>
+
+                <!-- Weekly Mess Menu Tabs & Display -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🗓️ Central Mess Weekly Menu</h3>
+                        <div class="header-action">
+                            <span class="badge badge-good">FSSAI Certified Kitchen</span>
+                        </div>
+                    </div>
+
+                    <div class="tab-nav" id="mess-day-tabs">
+                        <button class="tab-btn" onclick="selectMessDay('Monday')">Monday</button>
+                        <button class="tab-btn" onclick="selectMessDay('Tuesday')">Tuesday</button>
+                        <button class="tab-btn" onclick="selectMessDay('Wednesday')">Wednesday</button>
+                        <button class="tab-btn" onclick="selectMessDay('Thursday')">Thursday</button>
+                        <button class="tab-btn" onclick="selectMessDay('Friday')">Friday</button>
+                        <button class="tab-btn" onclick="selectMessDay('Saturday')">Saturday</button>
+                        <button class="tab-btn" onclick="selectMessDay('Sunday')">Sunday</button>
+                    </div>
+
+                    <div style="margin-bottom: 1rem; font-weight: 700; font-size: 1.05rem; color: var(--primary);">
+                        Menu for <span id="display-selected-day">Friday</span>
+                    </div>
+
+                    <div class="menu-meals-grid" id="meals-container">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- 2 Column Section: Canteen Items & Student Feedback -->
+                <div class="grid-2">
+                    <!-- Student Canteen Menu -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🏪 Student Canteen &amp; Cafe (10 AM - 11 PM)</h3>
+                            <span class="badge badge-info">Cashless UPI / Smart Card</span>
+                        </div>
+                        <div class="canteen-grid" id="canteen-items-container">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Mess Feedback & Hygiene Rating -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>⭐ Food Quality &amp; Hygiene Feedback</h3>
+                            <span class="text-muted" style="font-size: 0.75rem;">Monitored by Student Mess Council</span>
+                        </div>
+
+                        <form id="mess-feedback-form" onsubmit="handleFeedbackSubmit(event)" style="margin-bottom: 1.5rem;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label" for="fb-meal">Meal Evaluated</label>
+                                    <select id="fb-meal" class="form-control" required>
+                                        <option value="Breakfast">Breakfast</option>
+                                        <option value="Lunch">Lunch</option>
+                                        <option value="Snacks">Snacks</option>
+                                        <option value="Dinner">Dinner</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="fb-rating">Taste &amp; Hygiene Rating</label>
+                                    <select id="fb-rating" class="form-control" required>
+                                        <option value="5">⭐⭐⭐⭐⭐ Excellent (5/5)</option>
+                                        <option value="4">⭐⭐⭐⭐ Good (4/5)</option>
+                                        <option value="3">⭐⭐⭐ Average (3/5)</option>
+                                        <option value="2">⭐⭐ Needs Improvement (2/5)</option>
+                                        <option value="1">⭐ Poor (1/5)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="fb-comment">Specific Feedback or Suggestion</label>
+                                <textarea id="fb-comment" class="form-control" placeholder="Share comments about taste, vegetable freshness, chapati softness, or cleanliness..." required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Submit Feedback to Mess Warden →
+                            </button>
+                        </form>
+
+                        <div style="border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                            <h4 style="font-size: 0.85rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-muted);">
+                                Recent Student Reviews
+                            </h4>
+                            <div id="feedback-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="ai-assistant.js"></script>
+    <script>
+        let currentDayKey = "Friday";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const today = days[new Date().getDay()];
+            selectMessDay(today);
+            highlightCurrentMealSlot();
+            renderCanteenItems();
+            renderFeedbackList();
+        });
+
+        function highlightCurrentMealSlot() {
+            const now = new Date();
+            const hour = now.getHours();
+
+            // Reset
+            document.querySelectorAll(".meal-slot-pill").forEach(p => p.classList.remove("active-now"));
+
+            if (hour >= 7 && hour < 10) {
+                document.getElementById("pill-breakfast").classList.add("active-now");
+            } else if (hour >= 12 && hour < 15) {
+                document.getElementById("pill-lunch").classList.add("active-now");
+            } else if (hour >= 16 && hour < 18) {
+                document.getElementById("pill-snacks").classList.add("active-now");
+            } else if (hour >= 19 && hour < 22) {
+                document.getElementById("pill-dinner").classList.add("active-now");
+            }
+        }
+
+        function selectMessDay(day) {
+            currentDayKey = day;
+            document.getElementById("display-selected-day").textContent = day;
+
+            // Highlight tab
+            const tabs = document.querySelectorAll("#mess-day-tabs .tab-btn");
+            tabs.forEach(t => {
+                if (t.textContent.trim().toLowerCase() === day.toLowerCase()) {
+                    t.classList.add("active");
+                } else {
+                    t.classList.remove("active");
+                }
+            });
+
+            const data = CampusData.getData();
+            const menu = data.messCanteen.weeklyMenu[day] || data.messCanteen.weeklyMenu["Monday"];
+            const container = document.getElementById("meals-container");
+
+            container.innerHTML = `
+                <div class="meal-card" style="border-top: 3px solid #f59e0b;">
+                    <div style="font-weight: 700; color: #b45309; margin-bottom: 0.25rem;">☕ Breakfast (07:30 - 09:30 AM)</div>
+                    <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 0.5rem; line-height: 1.5;">${menu.breakfast}</p>
+                </div>
+                <div class="meal-card" style="border-top: 3px solid #10b981;">
+                    <div style="font-weight: 700; color: #047857; margin-bottom: 0.25rem;">🍛 Lunch (12:30 - 02:30 PM)</div>
+                    <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 0.5rem; line-height: 1.5;">${menu.lunch}</p>
+                </div>
+                <div class="meal-card" style="border-top: 3px solid #3b82f6;">
+                    <div style="font-weight: 700; color: #1d4ed8; margin-bottom: 0.25rem;">🥪 Snacks (04:30 - 06:00 PM)</div>
+                    <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 0.5rem; line-height: 1.5;">${menu.snacks}</p>
+                </div>
+                <div class="meal-card" style="border-top: 3px solid #8b5cf6;">
+                    <div style="font-weight: 700; color: #6d28d9; margin-bottom: 0.25rem;">🍲 Dinner (07:30 - 09:30 PM)</div>
+                    <p style="font-size: 0.85rem; color: var(--text-main); margin-top: 0.5rem; line-height: 1.5;">${menu.dinner}</p>
+                </div>
+            `;
+        }
+
+        function renderCanteenItems() {
+            const data = CampusData.getData();
+            const items = data.messCanteen.canteenItems;
+            const container = document.getElementById("canteen-items-container");
+
+            container.innerHTML = items.map(item => `
+                <div class="canteen-item-card">
+                    <div>
+                        <span class="badge badge-info" style="font-size: 0.65rem;">${item.category}</span>
+                        <div style="font-weight: 700; font-size: 0.875rem; margin-top: 0.35rem;">${item.name}</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem;">
+                        <span style="font-size: 1.05rem; font-weight: 800; color: var(--primary);">₹${item.price}</span>
+                        <span class="badge badge-good">Available</span>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function renderFeedbackList() {
+            const data = CampusData.getData();
+            const list = data.messCanteen.feedback;
+            const container = document.getElementById("feedback-list");
+
+            if (list.length === 0) {
+                container.innerHTML = `<div style="font-size: 0.8rem; color: var(--text-muted);">No student feedback submitted yet.</div>`;
+                return;
+            }
+
+            container.innerHTML = list.slice(0, 4).map(fb => `
+                <div style="background: #f8fafc; border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius-sm);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                        <div style="font-weight: 700; font-size: 0.8rem;">${fb.studentName} · <span style="color: var(--text-muted);">${fb.meal}</span></div>
+                        <span style="color: #f59e0b; font-size: 0.75rem;">${'⭐'.repeat(fb.rating)}</span>
+                    </div>
+                    <div style="font-size: 0.78rem; color: var(--text-main);">"${fb.comment}"</div>
+                    <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 0.25rem;">${fb.date}</div>
+                </div>
+            `).join("");
+        }
+
+        function handleFeedbackSubmit(e) {
+            e.preventDefault();
+            const comment = document.getElementById("fb-comment").value.trim();
+            if (!comment) {
+                showToast("Please enter your comments.", "warning");
+                return;
+            }
+
+            const fb = {
+                meal: document.getElementById("fb-meal").value,
+                rating: document.getElementById("fb-rating").value,
+                comment: comment
+            };
+
+            CampusData.addMessFeedback(fb);
+            showToast("Feedback submitted to the Mess Supervisor!", "success");
+
+            document.getElementById("fb-comment").value = "";
+            renderFeedbackList();
+        }
+    </script>
+</body>
+</html>

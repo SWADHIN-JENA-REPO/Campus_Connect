@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect AI — Student Requests &amp; Gate Passes</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand-icon">🎓</div>
+                <div class="sidebar-brand-text">
+                    <h1>CampusConnect</h1>
+                    <span>AI Campus Life</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <span class="nav-section-title">Core Services</span>
+                <a href="index.html" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="attendance.html" class="nav-link">
+                    <span class="nav-icon">📈</span>
+                    <span>Attendance</span>
+                </a>
+                <a href="timetable.html" class="nav-link">
+                    <span class="nav-icon">📅</span>
+                    <span>Timetable</span>
+                </a>
+                <a href="requests.html" class="nav-link active">
+                    <span class="nav-icon">📝</span>
+                    <span>Gate Pass &amp; Leave</span>
+                </a>
+                <a href="hostel.html" class="nav-link">
+                    <span class="nav-icon">🏢</span>
+                    <span>Hostel Helpdesk</span>
+                </a>
+                <a href="mess-canteen.html" class="nav-link">
+                    <span class="nav-icon">🍲</span>
+                    <span>Mess &amp; Canteen</span>
+                </a>
+                <a href="fees.html" class="nav-link">
+                    <span class="nav-icon">💳</span>
+                    <span>Fees &amp; Dues</span>
+                </a>
+                <a href="notices.html" class="nav-link">
+                    <span class="nav-icon">📢</span>
+                    <span>Notices &amp; Events</span>
+                </a>
+
+                <span class="nav-section-title">Role Management</span>
+                <a href="admin.html" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Admin Portal</span>
+                </a>
+                <a href="login.html" class="nav-link">
+                    <span class="nav-icon">🔄</span>
+                    <span>Switch Role / Login</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-mini-profile">
+                    <div class="user-avatar current-user-avatar">AS</div>
+                    <div class="user-details">
+                        <div class="user-name current-user-name">Aarav Sharma</div>
+                        <span class="user-role-badge current-user-dept">Student (24CS042)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="app-main">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="top-nav-left">
+                    <button class="mobile-menu-btn" aria-label="Toggle menu">☰</button>
+                    <div class="page-title-crumb">
+                        <h2>Leave, Gate Pass &amp; Certificate Requests</h2>
+                        <span>Digital gate permissions and official academic documentation</span>
+                    </div>
+                </div>
+                <div class="top-nav-right">
+                    <button class="btn btn-sm sos-quick-btn" onclick="triggerCampusSOS()" title="Instant Emergency Safety Dispatch">
+                        🚨 SOS EMERGENCY
+                    </button>
+                    <span class="role-switcher-pill">
+                        <span>👤 Role:</span>
+                        <strong class="current-user-role">Student</strong>
+                    </span>
+                    <button class="btn btn-outline btn-sm" onclick="switchUserRole('admin')">
+                        Switch to Admin
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="content-wrapper">
+                <!-- Apply Form Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📝 New Application / Permission Form</h3>
+                        <span class="text-muted" style="font-size: 0.75rem;">Digital Reference ID will be generated upon submission</span>
+                    </div>
+
+                    <form id="new-request-form" onsubmit="handleRequestSubmit(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="req-type">Application Type</label>
+                                <select id="req-type" class="form-control" onchange="toggleFormFields()" required>
+                                    <option value="Day Gate Pass">Day Gate Pass (City Outing - Same Day Return)</option>
+                                    <option value="Hostel Weekend Leave">Hostel Overnight / Weekend Leave (Home Visit)</option>
+                                    <option value="Mental Health / Medical Leave">Mental Health &amp; Medical Leave (Confidential)</option>
+                                    <option value="Bonafide Certificate">Bonafide Certificate (Scholarship / Passport)</option>
+                                    <option value="Grade Transcript">Official Grade Transcript / Character Certificate</option>
+                                    <option value="Hostel Room Transfer">Hostel Room Swap / Transfer Application</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="req-emergency">Parent / Emergency Phone</label>
+                                <input type="tel" id="req-emergency" class="form-control" placeholder="+91 98765 43210" value="+91 98765 43210" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row" id="time-fields-row">
+                            <div class="form-group">
+                                <label class="form-label" for="req-from-date">Date of Leaving</label>
+                                <input type="date" id="req-from-date" class="form-control" required>
+                            </div>
+                            <div class="form-group" id="to-date-group">
+                                <label class="form-label" for="req-to-date">Date of Return</label>
+                                <input type="date" id="req-to-date" class="form-control">
+                            </div>
+                            <div class="form-group" id="out-time-group">
+                                <label class="form-label" for="req-out-time">Expected Out-Time</label>
+                                <input type="text" id="req-out-time" class="form-control" value="04:30 PM">
+                            </div>
+                            <div class="form-group" id="in-time-group">
+                                <label class="form-label" for="req-in-time">Expected In-Time (Curfew: 9 PM)</label>
+                                <input type="text" id="req-in-time" class="form-control" value="08:30 PM">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="req-reason">Purpose / Detailed Reason</label>
+                            <textarea id="req-reason" class="form-control" placeholder="Specify clearly why you need this pass or certificate..." required></textarea>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                            <button type="reset" class="btn btn-outline">Reset Form</button>
+                            <button type="submit" class="btn btn-primary">
+                                🚀 Submit Application &amp; Generate Pass
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- History Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 My Requests &amp; Approvals History</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <select id="req-filter-status" class="form-control" style="width: 140px; padding: 0.35rem 0.65rem;" onchange="renderRequestsHistory()">
+                                <option value="All">All Statuses</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Reference ID</th>
+                                    <th>Type</th>
+                                    <th>Dates / Timing</th>
+                                    <th>Reason</th>
+                                    <th>Submitted On</th>
+                                    <th>Status</th>
+                                    <th>Admin / Warden Remarks</th>
+                                    <th>Pass</th>
+                                </tr>
+                            </thead>
+                            <tbody id="requests-history-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Digital Pass Modal -->
+    <div class="modal-backdrop" id="digital-pass-modal" style="display: none;">
+        <div class="modal-dialog" style="max-width: 440px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a, #0284c7); color: white;">
+                <div>
+                    <h3 style="color: white; font-size: 1.1rem; margin: 0;">Digital Campus Gate Pass</h3>
+                    <span style="font-size: 0.7rem; opacity: 0.85;">Official Electronic Exit Clearance</span>
+                </div>
+                <button type="button" class="modal-close" style="color: white;" onclick="closeModal('digital-pass-modal')">×</button>
+            </div>
+            <div class="modal-body" id="digital-pass-content" style="text-align: center; padding: 1.5rem;">
+                <!-- Populated dynamically -->
+            </div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="closeModal('digital-pass-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script src="ai-assistant.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Set today's date as default
+            const today = new Date().toISOString().split("T")[0];
+            document.getElementById("req-from-date").value = today;
+            document.getElementById("req-from-date").min = today;
+            
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById("req-to-date").value = tomorrow.toISOString().split("T")[0];
+
+            toggleFormFields();
+            renderRequestsHistory();
+        });
+
+        function toggleFormFields() {
+            const type = document.getElementById("req-type").value;
+            const timeRow = document.getElementById("time-fields-row");
+            const toDateGroup = document.getElementById("to-date-group");
+            const outTimeGroup = document.getElementById("out-time-group");
+            const inTimeGroup = document.getElementById("in-time-group");
+
+            if (type.includes("Certificate") || type.includes("Transcript") || type.includes("Transfer")) {
+                timeRow.style.display = "none";
+            } else {
+                timeRow.style.display = "flex";
+                if (type === "Day Gate Pass") {
+                    toDateGroup.style.display = "none";
+                    outTimeGroup.style.display = "block";
+                    inTimeGroup.style.display = "block";
+                } else {
+                    toDateGroup.style.display = "block";
+                    outTimeGroup.style.display = "block";
+                    inTimeGroup.style.display = "block";
+                }
+            }
+        }
+
+        function handleRequestSubmit(e) {
+            e.preventDefault();
+            const type = document.getElementById("req-type").value;
+            const phone = document.getElementById("req-emergency").value.trim();
+            const fromDate = document.getElementById("req-from-date").value;
+            const toDate = document.getElementById("req-to-date").value;
+            const outTime = document.getElementById("req-out-time").value;
+            const inTime = document.getElementById("req-in-time").value;
+            const reason = document.getElementById("req-reason").value.trim();
+
+            let outDateTime = fromDate;
+            let inDateTime = fromDate;
+
+            if (type === "Day Gate Pass") {
+                outDateTime = `${fromDate} ${outTime}`;
+                inDateTime = `${fromDate} ${inTime}`;
+            } else if (type === "Hostel Weekend Leave" || type.includes("Medical")) {
+                outDateTime = `${fromDate} ${outTime}`;
+                inDateTime = `${toDate} ${inTime}`;
+            } else {
+                outDateTime = "N/A (Document Application)";
+                inDateTime = "N/A";
+            }
+
+            const currentUser = CampusData.getCurrentUser();
+
+            const newReq = {
+                type: type,
+                reason: reason,
+                outDateTime: outDateTime,
+                inDateTime: inDateTime,
+                parentPhone: phone,
+                studentName: currentUser.name,
+                rollNo: currentUser.rollNo,
+                hostelRoom: `${currentUser.hostel} ${currentUser.roomNo}`
+            };
+
+            const saved = CampusData.addRequest(newReq);
+            showToast(`Application submitted! Ticket ID: ${saved.id}`, "success");
+
+            e.target.reset();
+            document.getElementById("req-emergency").value = phone;
+            toggleFormFields();
+            renderRequestsHistory();
+        }
+
+        function renderRequestsHistory() {
+            const tbody = document.getElementById("requests-history-body");
+            const filter = document.getElementById("req-filter-status").value;
+            const requests = CampusData.getRequests();
+
+            const filtered = filter === "All" ? requests : requests.filter(r => r.status === filter);
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted);">No applications found for selected status.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(r => `
+                <tr>
+                    <td><strong>${r.id}</strong></td>
+                    <td><span class="badge badge-info">${r.type}</span></td>
+                    <td style="font-size: 0.78rem;">
+                        <div><strong>Out:</strong> ${r.outDateTime || 'N/A'}</div>
+                        <div><strong>In:</strong> ${r.inDateTime || 'N/A'}</div>
+                    </td>
+                    <td style="max-width: 200px;">${r.reason}</td>
+                    <td style="font-size: 0.75rem; color: var(--text-muted);">${r.submittedOn}</td>
+                    <td>${getStatusBadge(r.status)}</td>
+                    <td style="font-size: 0.78rem; color: var(--text-muted);">${r.adminRemarks || 'Under review'}</td>
+                    <td>
+                        ${r.status === 'Approved' ? `
+                            <button class="btn btn-outline btn-sm" style="color: var(--success); border-color: var(--success);" onclick="viewDigitalPass('${r.id}')">
+                                📱 View Pass
+                            </button>
+                        ` : `
+                            <span class="text-muted" style="font-size: 0.72rem;">${r.status === 'Rejected' ? 'Unavailable' : 'Pending'}</span>
+                        `}
+                    </td>
+                </tr>
+            `).join("");
+        }
+
+        function viewDigitalPass(id) {
+            const req = CampusData.getRequests().find(r => r.id === id);
+            if (!req) return;
+
+            const modalContent = document.getElementById("digital-pass-content");
+            modalContent.innerHTML = `
+                <div style="border: 2px dashed #0284c7; border-radius: var(--radius-md); padding: 1.25rem; background: #f0f9ff; margin-bottom: 1rem;">
+                    <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #0369a1; font-weight: 700;">UNIVERSITY SECURITY OUTPOST PASS</div>
+                    <div style="font-size: 1.5rem; font-weight: 800; color: #1e3a8a; margin: 0.5rem 0;">${req.id}</div>
+                    <div class="badge badge-approved" style="font-size: 0.85rem; padding: 0.35rem 0.85rem; margin-bottom: 0.75rem;">
+                        ✔ OFFICIALLY APPROVED
+                    </div>
+                    
+                    <div style="text-align: left; font-size: 0.85rem; line-height: 1.8; margin-top: 0.5rem;">
+                        <div><strong>Student:</strong> ${req.studentName} (${req.rollNo})</div>
+                        <div><strong>Hostel Room:</strong> ${req.hostelRoom}</div>
+                        <div><strong>Pass Type:</strong> ${req.type}</div>
+                        <div><strong>Validity (Out):</strong> ${req.outDateTime}</div>
+                        <div><strong>Curfew (Return):</strong> ${req.inDateTime}</div>
+                        <div><strong>Warden Stamp:</strong> ${req.adminRemarks}</div>
+                    </div>
+
+                    <div style="margin-top: 1.25rem; padding: 0.75rem; background: white; border-radius: var(--radius-sm); border: 1px solid #bfdbfe;">
+                        <div style="font-family: monospace; font-size: 1.1rem; letter-spacing: 3px; font-weight: 700;">||| | |||| | ||| ||||</div>
+                        <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 0.25rem;">SCAN QR / BARCODE AT GATE 1</div>
+                    </div>
+                </div>
+            `;
+            openModal("digital-pass-modal");
+        }
+    </script>
+</body>
+</html>
